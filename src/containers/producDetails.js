@@ -40,7 +40,7 @@ export function ProductDetailsContainer() {
         validateSize.reduce((sum, size) => parseInt(sum) + parseInt(size.is_selected ? size.is_selected : 0), 0)
       )
     ) {
-      alert("O tamanho não foi selecionado");
+      alert("O tamanho não foi selecionado!");
       return true;
     }
 
