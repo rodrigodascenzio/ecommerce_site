@@ -19,7 +19,7 @@ export const Container = styled.div`
   /* height: 64px; */
   justify-content: space-between;
   align-items: center;
-  background: radial-gradient(circle, rgba(92, 39, 251, 1) 0%, rgba(112, 71, 247, 1) 100%);
+  background: ${(props) => props.theme.primary};
   box-shadow: 0px 1px 9px 0px rgba(214, 210, 214, 1);
   a {
     display: flex;
