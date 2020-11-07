@@ -36,7 +36,7 @@ export const Link = styled.a`
   text-decoration: none;
   /* background: orange; */
   &:hover {
-    color: #ff9c00;
+    color: ${(props) => props.theme.primary_color};
     transition: 200ms ease-in;
   }
 `;

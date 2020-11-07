@@ -15,7 +15,6 @@ import {
   Input,
   SubTitle,
   Price,
-  Coupon,
   Size,
   Extras,
   Name,
@@ -82,10 +81,6 @@ Cart.Button = function CartButton({ children, ...restProps }) {
 
 Cart.Input = function CartInput({ children, ...restProps }) {
   return <Input {...restProps}>{children}</Input>;
-};
-
-Cart.Coupon = function CartCoupon({ children, ...restProps }) {
-  return <Coupon {...restProps}>{children}</Coupon>;
 };
 
 Cart.Size = function CartSize({ children, ...restProps }) {

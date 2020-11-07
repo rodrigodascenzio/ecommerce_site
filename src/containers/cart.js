@@ -299,7 +299,9 @@ export function CartContainer() {
                 <Cart.Price>
                   {makingChanges || processingAddress
                     ? "Carregando.."
-                    : `${cart.info.type === "delivery" ? "Na entrega" : "Na retirada"} - ${cart.info.payment_method}`}
+                    : `${cart.info.type === "delivery" ? "Na entrega" : "Na retirada"} - ${
+                        cart.info.payment_method ? cart.info.payment_method : "Não definido"
+                      }`}
                 </Cart.Price>
               </Cart.SubGroup>
 

@@ -130,7 +130,8 @@ export const SubText = styled.p`
 
 export const Button = styled.button`
   border-radius: 4px;
-  background: ${({ primary }) => (primary ? "#4B59F7" : "#0467FB")};
+  background: ${(props) => props.theme.background_color};
+  border: 2px solid ${(props) => props.theme.primary_color};
   white-space: nowrap;
   padding: ${({ big }) => (big ? "12px 64px" : "10px 20px")};
   color: #fff;
@@ -141,9 +142,8 @@ export const Button = styled.button`
   margin: 20px 10px 0 10px;
   cursor: pointer;
   &:hover {
-    transition: all 0.3s ease-out;
     background: #fff;
-    background-color: ${({ primary }) => (primary ? "#0467FB" : "#4B59F7")};
+    color: ${(props) => props.theme.primary_color};
   }
   @media (min-width: 700px) {
     align-self: end;

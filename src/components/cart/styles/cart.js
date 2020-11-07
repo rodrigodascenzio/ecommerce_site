@@ -62,14 +62,14 @@ export const DeleteIcon = styled(MdDelete)`
   color: white;
   padding: 5px;
   border-radius: 5px;
-  background: rgba(92, 39, 251, 1);
+  background: ${(props) => props.theme.background_color};
   margin: 5px;
   z-index: 10;
   cursor: pointer;
   max-inline-size: 3%;
   min-inline-size: 3%;
   &:hover {
-    background-color: rgba(92, 39, 251, 0.7);
+    background: ${(props) => props.theme.background_hover};
   }
   align-items: center;
 `;
@@ -154,13 +154,6 @@ export const Price = styled.p`
   }
 `;
 
-export const Coupon = styled.div`
-  height: 100px;
-  background-color: silver;
-  border-radius: 5px;
-  margin: 5px;
-`;
-
 export const ContentBlock = styled.div`
   display: flex;
   flex-direction: column;
@@ -203,23 +196,25 @@ export const SubText = styled.p`
 
 export const Button = styled.button`
   border-radius: 4px;
-  background: ${({ primary }) => (primary ? "#4B59F7" : "#0467FB")};
+  background: ${(props) => props.theme.background_color};
+  border: 2px solid ${(props) => props.theme.primary_color};
   white-space: nowrap;
   padding: ${({ big }) => (big ? "12px 64px" : "10px 20px")};
   color: #fff;
   font-size: ${({ fontBig }) => (fontBig ? "20px" : "16px")};
   outline: none;
-  border: none;
   margin: 20px auto 0 auto;
   cursor: pointer;
   &:hover {
-    transition: all 0.3s ease-out;
     background: #fff;
-    background-color: ${({ primary }) => (primary ? "#0467FB" : "#4B59F7")};
+    color: ${(props) => props.theme.primary_color};
   }
   @media (min-width: 700px) {
     align-self: end;
     margin: 20px 5px 0 auto;
+  }
+  &:disabled {
+    opacity: 0.5;
   }
 `;
 

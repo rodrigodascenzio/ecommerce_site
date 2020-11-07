@@ -126,18 +126,22 @@ export const Input = styled.input`
 `;
 
 export const Submit = styled.button`
-  background: #e50914;
+  background: ${(props) => props.theme.background_color};
+  border: 2px solid ${(props) => props.theme.primary_color};
   border-radius: 4px;
   font-size: 16px;
   font-weight: bold;
   margin: 20px auto;
   padding: 16px;
-  border: 0;
   color: white;
   min-width: 30%;
   cursor: pointer;
   &:disabled {
     opacity: 0.5;
+  }
+  &:hover :not([disabled]) {
+    background: #fff;
+    color: ${(props) => props.theme.primary_color};
   }
 `;
 

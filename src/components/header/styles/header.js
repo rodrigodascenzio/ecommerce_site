@@ -19,7 +19,7 @@ export const Container = styled.div`
   /* height: 64px; */
   justify-content: space-between;
   align-items: center;
-  background: ${(props) => props.theme.primary};
+  background: ${(props) => props.theme.background_color};
   box-shadow: 0px 1px 9px 0px rgba(214, 210, 214, 1);
   a {
     display: flex;
