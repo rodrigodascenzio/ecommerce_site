@@ -27,39 +27,39 @@ export function App() {
   return (
     <Router>
       <Switch>
-        <IsUserRedirect user={user} loggedInPath={ROUTES.HOME} path={ROUTES.SIGN_IN}>
+        <IsUserRedirect exact user={user} loggedInPath={ROUTES.HOME} path={ROUTES.SIGN_IN}>
           <SignIn />
         </IsUserRedirect>
 
-        <ProtectedRoute user={true} path={ROUTES.EMAIL}>
+        <ProtectedRoute exact user={true} path={ROUTES.EMAIL}>
           <SignIn />
         </ProtectedRoute>
 
-        <ProtectedRoute user={true} path={ROUTES.SMS}>
+        <ProtectedRoute exact user={true} path={ROUTES.SMS}>
           <SignIn />
         </ProtectedRoute>
 
-        <ProtectedRoute user={true} path={ROUTES.CONFIRM_CODE}>
+        <ProtectedRoute exact user={true} path={ROUTES.CONFIRM_CODE}>
           <ConfirmCode />
         </ProtectedRoute>
 
-        <IsUserRedirect user={user} loggedInPath={ROUTES.HOME} path={ROUTES.REGISTER}>
+        <IsUserRedirect exact user={user} loggedInPath={ROUTES.HOME} path={ROUTES.REGISTER}>
           <Register />
         </IsUserRedirect>
 
-        <ProtectedRoute user={true} path={ROUTES.PRODUCT_DETAIL}>
+        <ProtectedRoute exact user={true} path={ROUTES.PRODUCT_DETAIL}>
           <ProductDetail />
         </ProtectedRoute>
 
-        <ProtectedRoute user={user} path={ROUTES.CART}>
+        <ProtectedRoute exact user={user} path={ROUTES.CART}>
           <Cart />
         </ProtectedRoute>
 
-        <ProtectedRoute user={user} path={ROUTES.PROFILE}>
+        <ProtectedRoute exact user={user} path={ROUTES.PROFILE}>
           <Profile />
         </ProtectedRoute>
 
-        <ProtectedRoute user={user} path={ROUTES.ORDERS}>
+        <ProtectedRoute exact user={user} path={ROUTES.ORDERS}>
           <Orders />
         </ProtectedRoute>
 
@@ -67,12 +67,8 @@ export function App() {
           <Browse />
         </ProtectedRoute>
 
-        <ProtectedRoute user={user} path={ROUTES.ORDER_DETAIL}>
+        <ProtectedRoute exact user={user} path={ROUTES.ORDER_DETAIL}>
           <OrderDetail />
-        </ProtectedRoute>
-
-        <ProtectedRoute user={true} path={ROUTES.NOT_FOUND}>
-          <NotFound />
         </ProtectedRoute>
 
         <IsUserRedirect user={user} loggedInPath={ROUTES.HOME} path={ROUTES.HOME}>

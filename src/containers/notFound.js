@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { NotFound } from "../components";
-import { BiMehBlank } from "react-icons/bi";
 
 export function NotFoundContainer() {
   useEffect(() => {
@@ -10,7 +9,8 @@ export function NotFoundContainer() {
   return (
     <NotFound>
       <NotFound.Card>
-        <BiMehBlank size="180" color="white" style={{ marginTop: "50px" }} />
+        <NotFound.Img src={require("../images/misc/error.svg")} />
+        <NotFound.Text>Em manutenção..</NotFound.Text>
       </NotFound.Card>
     </NotFound>
   );

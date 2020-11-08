@@ -1,19 +1,34 @@
 import styled from "styled-components/macro";
-import { color } from "../../../utils/colors";
 
-export const Container = styled.div`
-  background-color: ${color.white};
-  margin: 2.5vh 5vh;
-`;
+export const Container = styled.div``;
 
 export const Card = styled.div`
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   max-width: 1000px;
   border-radius: 10px;
-  height: 90vh;
   margin: 0 auto;
-  padding: 10px;
-  background: radial-gradient(circle, rgba(92, 39, 251, 1) 0%, rgba(112, 71, 247, 1) 100%);
+  height: 100vh;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+`;
+
+export const Img = styled.img`
+  align-self: center;
+  max-width: 100%;
+  height: 50vh;
+  margin-top: 50px;
+  margin-left: -50px;
+
+  @media (max-width: 600px) {
+    margin-left: -20px;
+  }
+`;
+
+export const Text = styled.h1`
+  font-size: 35px;
+  color: ${(props) => props.theme.feature_color};
+  padding: 20px;
+  color: #222;
+  align-self: center;
+  text-align: center;
+  font-weight: normal;
 `;

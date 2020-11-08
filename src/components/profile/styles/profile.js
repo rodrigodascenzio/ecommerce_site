@@ -13,10 +13,11 @@ export const Container = styled.div`
 
 export const Title = styled.h1`
   width: 100%;
-  font-size: 48px;
+  font-size: 36px;
   text-align: center;
   font-weight: 500;
   margin: 0 0 20px 0;
+  color: #222;
 `;
 
 export const List = styled.ul``;
@@ -79,7 +80,6 @@ export const Group = styled.div`
   flex-direction: column;
   margin: 10px;
   border-radius: 5px;
-  border: 1px solid ${color.white};
   padding: 20px;
   height: 100%;
 

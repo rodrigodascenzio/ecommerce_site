@@ -51,10 +51,18 @@ export const Item = styled.div`
   margin: 10px 0;
   border-radius: 5px;
   display: flex;
+  flex-wrap: wrap;
   cursor: pointer;
   justify-content: space-between;
 
   &:hover {
     background: ${color.white};
+  }
+
+  @media (max-width: 500px) {
+    div:nth-of-type(1) {
+      width: 100%;
+      margin-bottom: 20px;
+    }
   }
 `;

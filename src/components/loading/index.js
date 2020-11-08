@@ -3,7 +3,7 @@ import { LockBody, ReleaseBody, Spinner } from "./styles/loading";
 
 export default function Loading({ src, ...restProps }) {
   return (
-    <Spinner {...restProps} url="ecommerces/images/misc/spinner.png">
+    <Spinner {...restProps} url={require("../../images/misc/spinner.png")}>
       <LockBody />
     </Spinner>
   );

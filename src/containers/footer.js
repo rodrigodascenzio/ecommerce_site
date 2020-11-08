@@ -24,22 +24,22 @@ export function FooterContainer() {
             <Footer.Title>Redes Sociais</Footer.Title>
             <Footer.Row>
               {host.company.facebook && (
-                <Footer.Link href="#">
+                <Footer.Link href={`https://facebook.com/${host.company.facebook}`}>
                   <FaFacebook size="24" />
                 </Footer.Link>
               )}
               {host.company.instagram && (
-                <Footer.Link href="#">
+                <Footer.Link href={`https://instagram.com/${host.company.instagram}`}>
                   <FaInstagram size="24" />
                 </Footer.Link>
               )}
               {host.company.youtube && (
-                <Footer.Link href="#">
+                <Footer.Link href={`https://youtube.com/${host.company.youtube}`}>
                   <FaYoutube size="24" />
                 </Footer.Link>
               )}
               {host.company.twitter && (
-                <Footer.Link href="#">
+                <Footer.Link href={`https://twitter.com/${host.company.twitter}`}>
                   <FaTwitter size="24" />
                 </Footer.Link>
               )}
