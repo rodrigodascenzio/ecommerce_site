@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Card, Title, Group, Item, Text, SubText } from "./styles/orders";
+import { Container, Card, Title, Group, Item, InnerItem, Text, SubText } from "./styles/orders";
 
 export default function Orders({ children, ...restProps }) {
   return <Container {...restProps}>{children}</Container>;
@@ -27,4 +27,8 @@ Orders.Group = function OrdersGroup({ children, ...restProps }) {
 
 Orders.Item = function OrdersItem({ children, ...restProps }) {
   return <Item {...restProps}>{children}</Item>;
+};
+
+Orders.InnerItem = function OrdersInnerItem({ children, ...restProps }) {
+  return <InnerItem {...restProps}>{children}</InnerItem>;
 };

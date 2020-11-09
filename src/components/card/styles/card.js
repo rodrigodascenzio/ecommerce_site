@@ -2,7 +2,7 @@ import styled from "styled-components/macro";
 
 export const Title = styled.p`
   font-size: 24px;
-  color: #000;
+  color: #222;
   font-weight: bold;
   margin: 10px 0 0 30px;
 `;
@@ -15,8 +15,6 @@ export const Container = styled.div`
 export const Group = styled.div`
   max-width: 1140px;
   margin: 20px auto;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
   width: 100%;
 
   @media (min-width: 700px) {

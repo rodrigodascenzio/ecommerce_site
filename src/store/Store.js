@@ -3,7 +3,7 @@ import axios from "../utils/axios";
 import { SWRConfig } from "swr";
 import { seo } from "../helpers/seo";
 import { Loading } from "../components";
-import { CHECK_DOMAIN } from "../constants/apiRoutes";
+import { CHECK_DOMAIN, ADDRESS_SELECTED } from "../constants/apiRoutes";
 
 const initialState = {
   user: null,
@@ -43,6 +43,9 @@ const Store = ({ children }) => {
       setLocalStorageHost(host);
       setState({ ...state, host: host, user: user });
       setLoading(false);
+      axios.get(`${ADDRESS_SELECTED}/${user.user_id}`).then((res) => {
+        setState({ ...state, host: host, user: res.data });
+      });
     } else if (res.status === 204) {
       setState({ ...state, companyDoesntExist: true });
       setLoading(false);

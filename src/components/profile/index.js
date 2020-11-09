@@ -15,6 +15,7 @@ import {
   Submit,
   EditIcon,
   Div,
+  Logout,
 } from "./styles/profile";
 
 export default function profile({ children, ...restProps }) {
@@ -67,6 +68,10 @@ profile.Form = function profileForm({ children, ...restProps }) {
 
 profile.Submit = function profileSubmit({ children, ...restProps }) {
   return <Submit {...restProps}>{children}</Submit>;
+};
+
+profile.Logout = function profileLogout({ children, ...restProps }) {
+  return <Logout {...restProps}>{children}</Logout>;
 };
 
 profile.EditIcon = function profileEditIcon({ children, ...restProps }) {

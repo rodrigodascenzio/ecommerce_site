@@ -2,7 +2,7 @@ import styled from "styled-components/macro";
 import { color } from "../../../utils/colors";
 
 export const Container = styled.div`
-  background-color: ${color.white};
+  background-color: ${color.whiteLight};
   padding: 10px;
 
   @media (min-width: 700px) {

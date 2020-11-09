@@ -6,7 +6,6 @@ export const Card = styled.div`
   max-width: 1000px;
   border-radius: 10px;
   margin: 0 auto;
-  height: 100vh;
   display: flex;
   flex-direction: column;
 `;

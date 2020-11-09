@@ -19,6 +19,7 @@ export function ProductDetailsContainer() {
   const [processing, setProcessing] = useState(false);
   const [lifeCycleOption, setlifeCycleOption] = useState([]);
   const [validateSize, setValidateSize] = useState([]);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -27,6 +28,7 @@ export function ProductDetailsContainer() {
   useEffect(() => {
     setlifeCycleOption(data?.collection);
     setValidateSize(data?.size);
+    if (prod.edit) setQuantity(data?.product.cart_quantity);
   }, [data]);
 
   if (!data) return <Loading />;
@@ -38,7 +40,8 @@ export function ProductDetailsContainer() {
     if (
       !parseInt(
         validateSize.reduce((sum, size) => parseInt(sum) + parseInt(size.is_selected ? size.is_selected : 0), 0)
-      )
+      ) &&
+      data.size.length
     ) {
       alert("O tamanho não foi selecionado");
       return true;
@@ -67,7 +70,7 @@ export function ProductDetailsContainer() {
         company_id: data.product.company_id,
         note: "",
         product_id: data.product.product_id,
-        quantity: 1,
+        quantity: quantity,
         user_id: user.user_id,
         source: host.company.company_id,
       };
@@ -128,7 +131,7 @@ export function ProductDetailsContainer() {
         company_id: data.product.company_id,
         note: "",
         product_id: data.product.product_id,
-        quantity: 1,
+        quantity: quantity,
         user_id: user.user_id,
       };
 
@@ -249,6 +252,17 @@ export function ProductDetailsContainer() {
     if (hasToUpdate) setlifeCycleOption(updatedList);
   }
 
+  function handleClickQuantity(type) {
+    switch (type) {
+      case "PLUS":
+        setQuantity(parseInt(quantity) + 1);
+        break;
+      case "MINUS":
+        if (quantity > 1) setQuantity(parseInt(quantity) - 1);
+        break;
+    }
+  }
+
   return (
     <Product>
       <Product.Card>
@@ -258,18 +272,24 @@ export function ProductDetailsContainer() {
             <Product.Title>{data.product.name}</Product.Title>
             <Product.Price>{mMoney(data.product.price)}</Product.Price>
           </Product.Group>
-          <Product.Group boxshadow={true}>
+          <Product.Group style={{ borderBottom: "2px solid #fafafa" }}>
             <Product.SubTitle>Descrição</Product.SubTitle>
-            <Product.Text>{data.product.description}</Product.Text>
+            <Product.Text style={{ color: "#484848" }}>{data.product.description}</Product.Text>
           </Product.Group>
 
           {validateSize?.length > 0 && (
-            <Product.Group boxshadow={true}>
-              <Product.SubTitle>Tamanhos</Product.SubTitle>
+            <Product.Group>
+              <Product.Text style={{ padding: "0 10px" }}>Tamanhos</Product.Text>
               {validateSize.map((s) => (
-                <Product.SubGroup>
+                <Product.SubGroup
+                  style={{
+                    background: s.stock_quantity < 1 ? "#fafafa" : "none",
+                    color: s.stock_quantity < 1 ? "#ccc" : "",
+                  }}
+                >
                   <label>
                     <Product.Input
+                      disabled={s.stock_quantity < 1}
                       onClick={handleClickRadio}
                       type="radio"
                       name="size"
@@ -279,7 +299,7 @@ export function ProductDetailsContainer() {
                     />
                     <Product.SubGroup className="subgroup" direction="row">
                       <Product.SubText>{s.name}</Product.SubText>
-                      <Product.SubText>{s.price > 0 ? `+ R\$${s.price}` : `R\$${s.price}`}</Product.SubText>
+                      <Product.SubText>{s.price > 0 ? `+ ${mMoney(s.price)}` : `${mMoney(s.price)}`}</Product.SubText>
                     </Product.SubGroup>
                   </label>
                 </Product.SubGroup>
@@ -290,9 +310,9 @@ export function ProductDetailsContainer() {
           {lifeCycleOption?.length > 0 && (
             <Product.Group>
               {lifeCycleOption.map((c) => (
-                <>
-                  <Product.SubGroup margin="15px 0 0 0">
-                    <Product.Text>{c.name}</Product.Text>
+                <div style={{ margin: "0 0 10px 0" }}>
+                  <Product.SubGroup style={{ background: "#fafafa", padding: "5px" }} margin="0 0 10px 0">
+                    <Product.Text style={{ margin: "5px 0" }}>{c.name}</Product.Text>
                     <Product.SubText>{c.description}</Product.SubText>
                     <Product.SubText>
                       {c.min_quantity > 0 ? `minimo: ${c.min_quantity} - ` : ""} maximo: {c.max_quantity}
@@ -301,7 +321,7 @@ export function ProductDetailsContainer() {
                   {c.extra.map((e) => (
                     <Product.SubGroup direction="row">
                       {c.min_quantity > 0 && c.max_quantity < 2 ? (
-                        <label>
+                        <label style={{ width: "100%", padding: "10px 0" }}>
                           <Product.Input
                             onClick={() => handleClickOption(c, e, "RADIO")}
                             type="radio"
@@ -312,32 +332,43 @@ export function ProductDetailsContainer() {
                           />
                           <div>
                             <Product.SubText>{e.name}</Product.SubText>
-                            <Product.SubText>{e.price}</Product.SubText>
+                            <Product.SubText>{mMoney(e.price)}</Product.SubText>
                           </div>
                         </label>
                       ) : (
-                        <>
+                        <Product.SubGroup direction="row" style={{ margin: "5px" }}>
                           <Product.SubGroup margin="5px 10px 0 0" bordersub="1px solid gray" direction="row">
-                            <Product.PlusIcon onClick={() => handleClickOption(c, e, "PLUS")} />
-                            <Product.SubText>{e.quantity ? e.quantity : 0}</Product.SubText>
                             <Product.MinusIcon onClick={() => handleClickOption(c, e, "MINUS")} />
+                            <Product.SubText>{e.quantity ? e.quantity : 0}</Product.SubText>
+                            <Product.PlusIcon onClick={() => handleClickOption(c, e, "PLUS")} />
                           </Product.SubGroup>
                           <Product.SubGroup>
-                            <Product.SubText>{e.name}</Product.SubText>
-                            <Product.SubText>{e.description}</Product.SubText>
-                            <Product.SubText>{e.price}</Product.SubText>
+                            <Product.SubText style={{ color: "#303030" }}>{e.name}</Product.SubText>
+                            <Product.SubText style={{ color: "#ccc" }}>{e.description}</Product.SubText>
+                            <Product.SubText>{mMoney(e.price)}</Product.SubText>
                           </Product.SubGroup>
-                        </>
+                        </Product.SubGroup>
                       )}
                     </Product.SubGroup>
                   ))}
-                </>
+                </div>
               ))}
             </Product.Group>
           )}
-          <Product.Button onClick={prod.edit ? handleEdit : handleClick} disable={processing ? true : false}>
-            {processing ? "Carregando..." : prod.edit ? "Atualizar carrinho" : "Adicionar ao carrinho"}
-          </Product.Button>
+          <Product.Group style={{ display: "flex", alignItems: "flex-end", flexWrap: "wrap", margin: "auto 0 0 auto" }}>
+            <Product.SubGroup
+              bordersub="1px solid gray"
+              direction="row"
+              style={{ padding: "5px 0px", fontWeight: "bold" }}
+            >
+              <Product.MinusIcon size="20" onClick={() => handleClickQuantity("MINUS")} />
+              <Product.SubText>{quantity}</Product.SubText>
+              <Product.PlusIcon size="20" onClick={() => handleClickQuantity("PLUS")} />
+            </Product.SubGroup>
+            <Product.Button onClick={prod.edit ? handleEdit : handleClick} disable={processing ? true : false}>
+              {processing ? "Carregando..." : prod.edit ? "Atualizar carrinho" : "Adicionar ao carrinho"}
+            </Product.Button>
+          </Product.Group>
         </Product.ContentBlock>
       </Product.Card>
     </Product>

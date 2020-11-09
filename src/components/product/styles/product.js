@@ -51,8 +51,9 @@ export const Photo = styled.img`
 
 export const Group = styled.div`
   margin: ${({ margingroup }) => (margingroup ? margingroup : "10px 0")};
-  border-radius: 5px;
-  border: 1px solid ${color.white};
+  @media (max-width: 700px) {
+    justify-content: center;
+  }
 `;
 
 export const SubGroup = styled.div`
@@ -98,7 +99,6 @@ export const Price = styled.p`
   font-size: 24px;
   font-weight: bold;
   color: ${color.greenDark};
-  margin: 0;
 `;
 
 export const SubTitle = styled.p`
@@ -112,9 +112,7 @@ export const SubTitle = styled.p`
 export const Text = styled.p`
   display: flex;
   align-items: center;
-  margin-top: 5px;
   font-size: 16px;
-  margin: 0;
   user-select: none;
   line-height: normal;
 `;
@@ -133,21 +131,16 @@ export const Button = styled.button`
   background: ${(props) => props.theme.background_color};
   border: 2px solid ${(props) => props.theme.primary_color};
   white-space: nowrap;
-  padding: ${({ big }) => (big ? "12px 64px" : "10px 20px")};
+  padding: 10px 20px;
   color: #fff;
-  font-size: ${({ fontBig }) => (fontBig ? "20px" : "16px")};
+  font-size: 16px;
   outline: none;
-  border: none;
   align-self: center;
   margin: 20px 10px 0 10px;
   cursor: pointer;
   &:hover {
     background: #fff;
     color: ${(props) => props.theme.primary_color};
-  }
-  @media (min-width: 700px) {
-    align-self: end;
-    margin: auto 0 0 auto;
   }
 `;
 

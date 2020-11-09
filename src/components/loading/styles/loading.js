@@ -16,7 +16,7 @@ export const ReleaseBody = createGlobalStyle`
 export const Spinner = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: ${color.white};
+  background-color: ${color.whiteLight};
   z-index: 999;
   padding-top: 200px;
 

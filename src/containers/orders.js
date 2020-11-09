@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Orders, Loading } from "../components";
+import { Orders, Loading, NotFound } from "../components";
 import { ORDERS } from "../constants/apiRoutes";
 import * as ROUTES from "../constants/routes";
 import useSWR from "swr";
@@ -32,10 +32,39 @@ export function OrdersContainer() {
     return (
       <Orders>
         <Orders.Card>
-          <Orders.Title>Ainda não houve pedido</Orders.Title>
+          <NotFound>
+            <NotFound.Card>
+              <NotFound.Img src={require("../images/misc/error.svg")} />
+              <NotFound.Text>Ainda não houve pedido</NotFound.Text>
+            </NotFound.Card>
+          </NotFound>
         </Orders.Card>
       </Orders>
     );
+  }
+
+  function returnStatus(status) {
+    switch (status) {
+      case "pending":
+        return <Orders.Text>Aguardando confirmação</Orders.Text>;
+      case "canceled_user":
+      case "canceled_company":
+        return <Orders.Text>Pedido Cancelado</Orders.Text>;
+      case "concluded_not_rated":
+      case "concluded":
+        return <Orders.Text>Pedido Concluido</Orders.Text>;
+      case "delivery":
+        return <Orders.Text>Pedido saiu para entrega</Orders.Text>;
+      case "local":
+        return <Orders.Text>Liberado para retirada</Orders.Text>;
+      case "accepted":
+        return <Orders.Text>Pedido aceito</Orders.Text>;
+    }
+  }
+
+  function splitDate(date) {
+    const newDate = date.split("-");
+    return `${newDate[2]}/${newDate[1]}/${newDate[0]}`;
   }
 
   return (
@@ -45,22 +74,22 @@ export function OrdersContainer() {
         <Orders.Group>
           {data.order.map((item) => (
             <Orders.Item onClick={(e) => handleClickItem(item.order_id)}>
-              <div>
+              <Orders.InnerItem>
                 <Orders.SubText>Data</Orders.SubText>
-                <Orders.Text>{item.created_date}</Orders.Text>
-              </div>
-              <div>
+                <Orders.Text>{splitDate(item.created_date)}</Orders.Text>
+              </Orders.InnerItem>
+              <Orders.InnerItem>
                 <Orders.SubText>Nº Pedido</Orders.SubText>
                 <Orders.Text>{item.order_id}</Orders.Text>
-              </div>
-              <div>
+              </Orders.InnerItem>
+              <Orders.InnerItem style={{ width: "20%" }}>
                 <Orders.SubText>Status</Orders.SubText>
-                <Orders.Text>{item.status}</Orders.Text>
-              </div>
-              <div>
+                {returnStatus(item.status)}
+              </Orders.InnerItem>
+              <Orders.InnerItem style={{ minWidth: "10%" }}>
                 <Orders.SubText>Total</Orders.SubText>
                 <Orders.Text>{mMoney(item.total_amount)}</Orders.Text>
-              </div>
+              </Orders.InnerItem>
             </Orders.Item>
           ))}
         </Orders.Group>

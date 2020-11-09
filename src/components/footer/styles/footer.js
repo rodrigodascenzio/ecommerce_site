@@ -1,10 +1,10 @@
-import styled from "styled-components";
+import styled from "styled-components/macro";
 import { color } from "../../../utils/colors";
 
 export const Container = styled.div`
   padding: 20px 0;
-  margin: 50px;
-  border-top: 2px solid ${color.whiteDarkLight};
+  margin: 100px 0 20px 0;
+  border-top: 3px solid ${color.whiteDarkLight};
 `;
 
 export const Wrapper = styled.div`

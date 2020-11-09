@@ -3,7 +3,7 @@ import { color } from "../../../utils/colors";
 import { AiFillEdit } from "react-icons/ai";
 
 export const Container = styled.div`
-  background-color: ${color.white};
+  background-color: ${color.whiteLight};
   padding: 10px;
 
   @media (min-width: 700px) {
@@ -13,11 +13,10 @@ export const Container = styled.div`
 
 export const Title = styled.h1`
   width: 100%;
-  font-size: 36px;
-  text-align: center;
-  font-weight: 500;
+  font-size: 28px;
+  font-weight: bold;
   margin: 0 0 20px 0;
-  color: #222;
+  color: #303030;
 `;
 
 export const List = styled.ul``;
@@ -52,7 +51,7 @@ export const Card = styled.div`
   padding: 10px;
 
   @media (min-width: 700px) {
-    padding: 50px;
+    padding: 20px;
   }
 `;
 
@@ -104,7 +103,7 @@ export const Base = styled.form`
 `;
 
 export const Form = styled.div`
-  border: 1px solid ${color.white};
+  border: 1px solid ${color.whiteLight};
   border-radius: 5px;
   width: 100%;
   margin: auto;
@@ -131,7 +130,7 @@ export const Submit = styled.button`
   border-radius: 4px;
   font-size: 16px;
   font-weight: bold;
-  margin: 20px auto;
+  margin: 50px auto 0 auto;
   padding: 16px;
   color: white;
   min-width: 30%;
@@ -142,6 +141,17 @@ export const Submit = styled.button`
   &:hover :not([disabled]) {
     background: #fff;
     color: ${(props) => props.theme.primary_color};
+  }
+`;
+
+export const Logout = styled(Submit)`
+  background: white;
+  border: 2px solid ${color.whiteDark};
+  color: ${color.whiteDark};
+  &:hover :not([disabled]) {
+    background: ${color.whiteDark};
+    background: ${color.whiteDark};
+    color: white;
   }
 `;
 

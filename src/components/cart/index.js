@@ -21,6 +21,7 @@ import {
   NameContainer,
   Quantity,
   DeleteIcon,
+  Select,
 } from "./styles/cart";
 
 export default function Cart({ children, ...restProps }) {
@@ -81,6 +82,10 @@ Cart.Button = function CartButton({ children, ...restProps }) {
 
 Cart.Input = function CartInput({ children, ...restProps }) {
   return <Input {...restProps}>{children}</Input>;
+};
+
+Cart.Select = function CartSelect({ children, ...restProps }) {
+  return <Select {...restProps}>{children}</Select>;
 };
 
 Cart.Size = function CartSize({ children, ...restProps }) {

@@ -1,10 +1,17 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Order, Loading, Cart } from "../components";
-import { ORDER_DETAIL } from "../constants/apiRoutes";
+import { Loading, Cart } from "../components";
+import { ORDER_DETAIL, CANCEL_ORDER, RATING_ORDER } from "../constants/apiRoutes";
 import useSWR from "swr";
 import { Context } from "../store/Store";
 import { mMoney } from "../utils/masks";
+import axios from "../utils/axios";
+import { FaMotorcycle } from "react-icons/fa";
+import { BiStore } from "react-icons/bi";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { IoMdDoneAll } from "react-icons/io";
+import { BsFillInboxesFill } from "react-icons/bs";
+import { FcCancel } from "react-icons/fc";
 
 export function OrderDetailContainer() {
   const history = useHistory();
@@ -22,23 +29,102 @@ export function OrderDetailContainer() {
 
   console.log(data);
 
-  const products = data.order.item;
+  const item = data.order.item;
   const order = data.order;
 
-  console.log("aaaaaaaaa", products);
-  console.log("bbbbbbbbb", order);
+  function handleCanceling() {
+    setProcessing(true);
+    axios
+      .patch(CANCEL_ORDER, {
+        status: "canceled_user",
+        order_id: order.order_id,
+        user_id: order.user_id,
+        company_id: order.company_id,
+      })
+      .then((res) => {
+        console.log(res.data);
+        setProcessing(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        setProcessing(false);
+      });
+  }
 
-  async function handleRating() {}
-
-  async function handleCanceling() {}
+  function returnStatus(status) {
+    switch (status) {
+      case "pending":
+        return (
+          <>
+            <AiOutlineLoading3Quarters style={{ margin: "0 20px 0 10px" }} />
+            <Cart.Name>Aguardando confirmação</Cart.Name>
+          </>
+        );
+      case "canceled_user":
+      case "canceled_company":
+        return (
+          <>
+            <FcCancel style={{ margin: "0 20px 0 10px" }} />
+            <Cart.Name>Pedido Cancelado</Cart.Name>
+          </>
+        );
+      case "concluded_not_rated":
+      case "concluded":
+        return (
+          <>
+            <IoMdDoneAll style={{ margin: "0 20px 0 10px" }} />
+            <Cart.Name>Pedido Concluido</Cart.Name>
+          </>
+        );
+      case "delivery":
+        return (
+          <>
+            <FaMotorcycle style={{ margin: "0 20px 0 10px" }} />
+            <Cart.Name>Pedido saiu para entrega</Cart.Name>
+          </>
+        );
+      case "local":
+        return (
+          <>
+            <BiStore style={{ margin: "0 20px 0 10px" }} />
+            <Cart.Name>Liberado para retirada</Cart.Name>
+          </>
+        );
+      case "accepted":
+        return (
+          <>
+            <BsFillInboxesFill style={{ margin: "0 20px 0 10px" }} />
+            <Cart.Name>Pedido aceito</Cart.Name>
+          </>
+        );
+    }
+  }
 
   return (
     <Cart>
       <Cart.Card>
+        <Cart.Products style={{ alignItems: "center", padding: "20px" }}>
+          <>
+            <Cart.SubTitle>Status do Pedido</Cart.SubTitle>
+            <Cart.Product
+              style={{
+                cursor: "default",
+                alignItems: "center",
+                padding: "20px",
+                margin: "20px",
+                border: "2px solid #222",
+                borderRadius: "5px",
+              }}
+            >
+              {returnStatus(order.status)}
+            </Cart.Product>
+          </>
+        </Cart.Products>
+
         <Cart.Products>
           <>
-            <Cart.SubTitle>Detalhe do Pedido</Cart.SubTitle>
-            {products.map((p) => (
+            <Cart.SubTitle>Detalhes</Cart.SubTitle>
+            {item.map((p) => (
               <Cart.Product style={{ cursor: "default" }}>
                 <Cart.Quantity minsize="10" fontsize="16">
                   {p.quantity}
@@ -104,10 +190,10 @@ export function OrderDetailContainer() {
             </Cart.SubGroup>
           </Cart.SubGroup>
         </Cart.Products>
-
+        {/* 
         {order.status.includes("concluded") && !order.rating && (
           <Cart.Button onClick={handleRating}>{processing ? "Processando..." : " Avaliar pedido"}</Cart.Button>
-        )}
+        )} */}
         {order.status.includes("pending") && (
           <Cart.Button onClick={handleCanceling}>{processing ? "Processando..." : " Cancelar pedido"}</Cart.Button>
         )}

@@ -2,7 +2,7 @@ import styled from "styled-components/macro";
 import { color } from "../../../utils/colors";
 import { MdDelete } from "react-icons/md";
 export const Container = styled.div`
-  background-color: ${color.white};
+  background-color: ${color.whiteLight};
   padding: 10px;
 
   @media (min-width: 700px) {
@@ -22,7 +22,7 @@ export const Card = styled.div`
   padding: 10px;
 
   @media (min-width: 700px) {
-    padding: 50px;
+    padding: 0 30px 20px 30px;
   }
 `;
 
@@ -53,7 +53,7 @@ export const Product = styled.div`
   padding: 5px;
 
   :hover {
-    background: ${color.white};
+    background: ${color.whiteLight};
   }
   cursor: pointer;
 `;
@@ -91,7 +91,7 @@ export const Group = styled.div`
   /* ${({ boxshadow }) => (boxshadow ? "box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); padding:10px" : "")}; */
   margin: ${({ margingroup }) => (margingroup ? margingroup : "10px 0")};
   border-radius: 5px;
-  border: 1px solid ${color.white};
+  border: 1px solid ${color.whiteLight};
 `;
 
 export const SubGroup = styled.div`
@@ -161,7 +161,7 @@ export const ContentBlock = styled.div`
 
   @media (min-width: 700px) {
     margin-left: 30px;
-    border: 2px solid ${color.white};
+    border: 2px solid ${color.whiteLight};
   }
 `;
 
@@ -169,13 +169,15 @@ export const Title = styled.p`
   font-size: 24px;
   font-weight: bold;
   margin: 10px;
+  color: #303030;
 `;
 
 export const SubTitle = styled.p`
-  font-size: 20px;
+  font-size: 16px;
   margin: 10px;
   user-select: none;
   font-weight: bold;
+  color: #303030;
 `;
 
 export const Text = styled.p`
@@ -220,4 +222,13 @@ export const Button = styled.button`
 
 export const Input = styled.input`
   margin-right: 10px;
+`;
+
+export const Select = styled.select`
+  padding: 5px;
+  option {
+    :disabled {
+      background: #ccc;
+    }
+  }
 `;

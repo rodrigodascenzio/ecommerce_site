@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Fuse from "fuse.js";
-import { Card, Header, Loading, Wrapper } from "../components";
+import { Card, Header, Loading, Wrapper, NotFound } from "../components";
 import { Context } from "../store/Store";
 import * as ROUTES from "../constants/routes";
 import { useHistory } from "react-router-dom";
@@ -11,7 +11,7 @@ import { mMoney } from "../utils/masks";
 
 export function BrowseContainer() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [slideRows, setSlideRows] = useState([]);
+  const [products, setproducts] = useState([]);
   const history = useHistory();
   const { state } = useContext(Context);
   const { user, host } = state;
@@ -20,20 +20,20 @@ export function BrowseContainer() {
   console.log(state);
 
   useEffect(() => {
-    setSlideRows(data?.product);
+    setproducts(data?.product);
   }, [data]);
 
   useEffect(() => {
-    const fuse = new Fuse(slideRows, {
+    const fuse = new Fuse(products, {
       keys: ["description", "name", "price"],
     });
     const results = fuse.search(searchTerm).map(({ item }) => item);
 
-    if (slideRows.length > 0 && searchTerm.length > 3 && results.length > 0) {
-      setSlideRows(results);
+    if (products.length > 0 && searchTerm.length > 3 && results.length > 0) {
+      setproducts(results);
     } else {
       if (data) {
-        setSlideRows(data.product);
+        setproducts(data.product);
       }
     }
   }, [searchTerm]);
@@ -56,6 +56,21 @@ export function BrowseContainer() {
   }
 
   if (!data) return <Loading />;
+
+  if (!data.product.length) {
+    return (
+      <Card>
+        <Card.Group>
+          <NotFound>
+            <NotFound.Card>
+              <NotFound.Img src={require("../images/misc/error.svg")} />
+              <NotFound.Text>Em manutenção</NotFound.Text>
+            </NotFound.Card>
+          </NotFound>
+        </Card.Group>
+      </Card>
+    );
+  }
 
   return (
     <Wrapper>
@@ -84,9 +99,9 @@ export function BrowseContainer() {
       </Header>
       <Card>
         <Card.Group>
-          <Card.Title>Produtos</Card.Title>
+          <Card.Title>{host?.company.category_company_id === "1" ? "Cardápio" : "Produtos"}</Card.Title>
           <Card.Entities>
-            {slideRows?.map((item) => (
+            {products?.map((item) => (
               <Card.Item id={item.product_id} key={item.product_id} item={item} onClick={handleClick}>
                 <Card.Image src={item.photo} />
                 <Card.Meta>

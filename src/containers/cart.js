@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Cart, Loading } from "../components";
+import { Cart, Loading, NotFound } from "../components";
 import { CART, CART_INFO, CART_ORDER, CART_COUPON_INFO, CART_DELETE_PRODUCT } from "../constants/apiRoutes";
 import * as ROUTES from "../constants/routes";
 import useSWR, { mutate, trigger } from "swr";
@@ -35,6 +35,22 @@ export function CartContainer() {
   const cart = data.cart_company;
 
   console.log("caarat", user);
+
+  if (data.cart_company_empty || products.length < 1) {
+    return (
+      <Cart>
+        <Cart.Card>
+          <NotFound>
+            <NotFound.Card>
+              <NotFound.Img src={require("../images/misc/error.svg")} />
+              <NotFound.Text>Carrinho vazio</NotFound.Text>
+            </NotFound.Card>
+          </NotFound>
+        </Cart.Card>
+      </Cart>
+    );
+  }
+
   if (!user.address) {
     return (
       <Cart>
@@ -47,14 +63,6 @@ export function CartContainer() {
             }}
           />
         </Cart.Card>
-      </Cart>
-    );
-  }
-
-  if (data.cart_company_empty || products.length < 1) {
-    return (
-      <Cart>
-        <Cart.Card style={{ textAlign: "center" }}>Carrinho vazio</Cart.Card>
       </Cart>
     );
   }
@@ -168,11 +176,14 @@ export function CartContainer() {
     <Cart>
       {Array.isArray(products) && products.length > 0 && (
         <Cart.Card>
+          <Cart.Title style={{ margin: "20px 5px" }}>Carrinho</Cart.Title>
           <Cart.Products>
             <>
-              <Cart.SubTitle>Produtos</Cart.SubTitle>
               {products.map((p) => (
-                <Cart.Product onClick={(e) => handleEditProduct(e, p)}>
+                <Cart.Product
+                  style={{ border: parseInt(p.is_available) ? "none" : "1px solid red" }}
+                  onClick={(e) => handleEditProduct(e, p)}
+                >
                   <Cart.Quantity minsize="10" fontsize="16">
                     {p.quantity}
                   </Cart.Quantity>
@@ -194,7 +205,7 @@ export function CartContainer() {
           </Cart.Products>
 
           <Cart.Products>
-            <select
+            <Cart.Select
               name="type"
               id="type"
               onChange={(e) => {
@@ -211,7 +222,7 @@ export function CartContainer() {
                   Retirar em
                 </option>
               )}
-            </select>
+            </Cart.Select>
             {processingAddress ? (
               <Cart.Text>Carregando...</Cart.Text>
             ) : (
@@ -222,13 +233,13 @@ export function CartContainer() {
           <Cart.Products>
             <Cart.Text>Forma de pagamento</Cart.Text>
             <div>
-              <select name="payment1" id="payment1">
+              <Cart.Select name="payment1" id="payment1">
                 <option value="online" disabled={true}>
                   Online
                 </option>
                 <option value="offline">Na {cart.info.type === "delivery" ? "entrega" : "retirada"}</option>
-              </select>
-              <select
+              </Cart.Select>
+              <Cart.Select
                 name="payment"
                 id="payment"
                 onChange={(e) => {
@@ -241,7 +252,7 @@ export function CartContainer() {
                     {p.name}
                   </option>
                 ))}
-              </select>
+              </Cart.Select>
             </div>
           </Cart.Products>
 
@@ -269,7 +280,7 @@ export function CartContainer() {
                   <Cart.SubGroup style={{ alignItems: "center" }}>
                     <Cart.Text>Desconto</Cart.Text> <Cart.SubText>* (Não aplicado no valor da entrega)</Cart.SubText>
                   </Cart.SubGroup>
-                  <select
+                  <Cart.Select
                     name="coupon"
                     id="coupon"
                     onChange={(e) => {
@@ -290,7 +301,7 @@ export function CartContainer() {
                           : mMoney(roudHalf((c.value * cart.subtotal_amount) / 100))}
                       </option>
                     ))}
-                  </select>
+                  </Cart.Select>
                 </Cart.SubGroup>
               )}
 

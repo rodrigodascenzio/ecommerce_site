@@ -9,6 +9,7 @@ import axios from "../utils/axios";
 import { mCPF } from "../utils/masks";
 import { useHistory } from "react-router-dom";
 import { ProfileAddressContainer } from "./profileAddress";
+import { Background } from "../components/header/styles/header";
 
 export function ProfileContainer() {
   const { state, removeLocalStorage, setLocalStorage } = useContext(Context);
@@ -101,14 +102,21 @@ export function ProfileContainer() {
               </Profile.Base>
               <ProfileAddressContainer address={data.address} />
             </Profile.Content>
-            <Profile.Group>
-              <Profile.Submit
+            <Profile.Group
+              style={{
+                margin: 0,
+                padding: 0,
+                borderTop: "1px solid #ccc",
+                borderRadius: 0,
+              }}
+            >
+              <Profile.Logout
                 onClick={() => {
                   removeLocalStorage();
                 }}
               >
                 Sair
-              </Profile.Submit>
+              </Profile.Logout>
             </Profile.Group>
           </Profile.Form>
         </Profile.Card>

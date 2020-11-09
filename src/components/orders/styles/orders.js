@@ -2,7 +2,7 @@ import styled from "styled-components/macro";
 import { color } from "../../../utils/colors";
 
 export const Container = styled.div`
-  background: ${color.white};
+  background: ${color.whiteLight};
   padding: 10px;
 
   @media (min-width: 700px) {
@@ -56,7 +56,7 @@ export const Item = styled.div`
   justify-content: space-between;
 
   &:hover {
-    background: ${color.white};
+    background: ${color.whiteLight};
   }
 
   @media (max-width: 500px) {
@@ -64,5 +64,10 @@ export const Item = styled.div`
       width: 100%;
       margin-bottom: 20px;
     }
+    ${Text} {
+      font-size: 14px;
+    }
   }
 `;
+
+export const InnerItem = styled.div``;
