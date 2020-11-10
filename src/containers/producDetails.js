@@ -82,6 +82,7 @@ export function ProductDetailsContainer() {
             if (e.quantity > 0) {
               productPost.extra.push({
                 collection_id: c.collection_id,
+                collection_extra_id: e.collection_extra_id,
                 user_id: user.user_id,
                 cart_extra_id: "",
                 cart_id: "",
@@ -142,6 +143,7 @@ export function ProductDetailsContainer() {
             if (e.quantity > 0) {
               productPatch.extra.push({
                 collection_id: c.collection_id,
+                collection_extra_id: e.collection_extra_id,
                 user_id: user.user_id,
                 cart_extra_id: "",
                 cart_id: prod.cart_id,
@@ -274,7 +276,7 @@ export function ProductDetailsContainer() {
           </Product.Group>
           <Product.Group style={{ borderBottom: "2px solid #fafafa" }}>
             <Product.SubTitle>Descrição</Product.SubTitle>
-            <Product.Text style={{ color: "#484848" }}>{data.product.description}</Product.Text>
+            <Product.Text style={{ color: "#484848", fontSize: "14px" }}>{data.product.description}</Product.Text>
           </Product.Group>
 
           {validateSize?.length > 0 && (

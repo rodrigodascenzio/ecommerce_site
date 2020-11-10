@@ -11,7 +11,7 @@ export function FooterContainer() {
     <Footer>
       <Footer.Wrapper>
         <Footer.Row style={{ justifyContent: "space-between" }}>
-          <Footer.Column>
+          {/* <Footer.Column>
             <Footer.Title>Sobre</Footer.Title>
             <Footer.Row>
               <Footer.Link href="/about#schedule">Horários</Footer.Link>
@@ -19,7 +19,7 @@ export function FooterContainer() {
               <Footer.Link href="/about#address">Endereço</Footer.Link>
               <Footer.Link href="/terms">Termos</Footer.Link>
             </Footer.Row>
-          </Footer.Column>
+          </Footer.Column> */}
           <Footer.Column>
             <Footer.Title>Redes Sociais</Footer.Title>
             <Footer.Row>
@@ -45,12 +45,15 @@ export function FooterContainer() {
               )}
             </Footer.Row>
           </Footer.Column>
-        </Footer.Row>
-        <Footer.Row>
           <Footer.Column>
             <Footer.Text>{`${host.company.name}. Todos os direitos reservados - 2020`}</Footer.Text>
           </Footer.Column>
         </Footer.Row>
+        {/* <Footer.Row>
+          <Footer.Column>
+            <Footer.Text>{`${host.company.name}. Todos os direitos reservados - 2020`}</Footer.Text>
+          </Footer.Column>
+        </Footer.Row> */}
       </Footer.Wrapper>
     </Footer>
   );
