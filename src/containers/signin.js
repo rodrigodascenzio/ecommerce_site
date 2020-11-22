@@ -29,7 +29,7 @@ export function SignInContainer() {
     history.replace(ROUTES.HOME);
   }
 
-  const isInvalid = !user.temp_email_id && !user.temp_sms_id;
+  const isInvalid = !user.id && !user.id;
 
   const handleEmail = (event) => {
     event.preventDefault();
@@ -54,7 +54,7 @@ export function SignInContainer() {
   const handleSMS = (event) => {
     event.preventDefault();
     setProcessing(true);
-    user.temp_sms_id = `+55${mNum(user.temp_sms_id)}`;
+    user.id = `+55${mNum(user.id)}`;
     axios
       .post(SEND_SMS, user)
       .then((res) => {
@@ -117,17 +117,17 @@ export function SignInContainer() {
           <Form.Input
             type="email"
             placeholder="seu@email.com"
-            value={user.temp_email_id}
-            onChange={({ target }) => setUser({ ...user, temp_email_id: target.value })}
+            value={user.id}
+            onChange={({ target }) => setUser({ ...user, id: target.value })}
           />
         )}
         {document.location.pathname === ROUTES.SMS && (
           <Form.Input
             type="text"
             placeholder="(00) 0 0000 0000"
-            value={user.temp_sms_id}
+            value={user.id}
             maxLength="14"
-            onChange={({ target }) => setUser({ ...user, temp_sms_id: mTel(target.value) })}
+            onChange={({ target }) => setUser({ ...user, id: mTel(target.value) })}
           />
         )}
         <Form.Submit disabled={isInvalid || processing} type="submit" data-testid="sign-in">

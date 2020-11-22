@@ -21,8 +21,6 @@ export function HeaderContainer({ isInLoginProcess, children }) {
     history.push(ROUTES.PROFILE);
   }
 
-  console.log(document.location.pathname);
-
   return (
     <Header src={host.company.banner_photo ? host.company.banner_photo : ""}>
       <Header.Frame>

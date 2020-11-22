@@ -14,8 +14,8 @@ export function RegisterContainer() {
   const [user, setUser] = useState({
     ...history.location.state.user,
     full_name: "",
-    user_id: "",
-    source: host.company.company_id,
+    id: "",
+    source: host.company.id,
   });
   const [error, setError] = useState("");
   const [processing, setProcessing] = useState(false);

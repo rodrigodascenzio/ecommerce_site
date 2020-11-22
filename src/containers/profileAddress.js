@@ -20,8 +20,8 @@ export function ProfileAddressContainer({ address, callback }) {
     const method = address ? "patch" : "post";
     axios[method](ADDRESS, {
       ...addressGeo,
-      address_id: address ? address.address_id : "",
-      user_id: user.user_id,
+      id: address ? address.id : "",
+      user_id: user.id,
       complement: userAddress.address.complement,
     })
       .then(async (res) => {
@@ -29,9 +29,8 @@ export function ProfileAddressContainer({ address, callback }) {
         await setLocalStorage({ ...user, address: addressGeo });
         if (typeof callback === "function") {
           callback();
-        } else {
-          setProcessing(false);
         }
+        setProcessing(false);
       })
       .catch((error) => {
         console.log(error);

@@ -36,16 +36,18 @@ const Store = ({ children }) => {
           background_color: "#ffffff",
         },
       });
-      const user = JSON.parse(localStorage.getItem(`nuppin::${host.company.company_id}::user`));
+      const user = JSON.parse(localStorage.getItem(`nuppin::${host.company.id}::user`));
       if (user) {
         axios.defaults.headers.Authorization = `Bearer ${user.refresh_token}`;
       }
       setLocalStorageHost(host);
       setState({ ...state, host: host, user: user });
       setLoading(false);
-      axios.get(`${ADDRESS_SELECTED}/${user.user_id}`).then((res) => {
-        setState({ ...state, host: host, user: res.data });
-      });
+      if (user) {
+        axios.get(`${ADDRESS_SELECTED}/${user.id}`).then((res) => {
+          setState({ ...state, host: host, user: { ...user, ...res.data } });
+        });
+      }
     } else if (res.status === 204) {
       setState({ ...state, companyDoesntExist: true });
       setLoading(false);
@@ -74,7 +76,7 @@ const Store = ({ children }) => {
           background_color: "#ffffff",
         },
       });
-      const user = JSON.parse(localStorage.getItem(`nuppin::${host.company.company_id}::user`));
+      const user = JSON.parse(localStorage.getItem(`nuppin::${host.company.id}::user`));
       if (user) {
         axios.defaults.headers.Authorization = `Bearer ${user.refresh_token}`;
       }
@@ -88,16 +90,18 @@ const Store = ({ children }) => {
   }, []);
 
   function setLocalStorage(user) {
-    localStorage.setItem(`nuppin::${state.host.company.company_id}::user`, JSON.stringify({ ...user }));
-    axios.defaults.headers.Authorization = `Bearer ${user.refresh_token}`;
-    setState({ ...state, user: user });
+    if (user && state.host.company.id) {
+      localStorage.setItem(`nuppin::${state.host.company.id}::user`, JSON.stringify({ ...user }));
+      axios.defaults.headers.Authorization = `Bearer ${user.refresh_token}`;
+      setState({ ...state, user: user });
+    }
   }
 
   function setLocalStorageHost(host) {
     localStorage.setItem(`nuppin::${document.location.host}::host`, JSON.stringify({ ...host }));
   }
 
-  function removeLocalStorage(key = `nuppin::${state.host.company.company_id}::user`) {
+  function removeLocalStorage(key = `nuppin::${state.host.company.id}::user`) {
     localStorage.removeItem(key);
     axios.defaults.headers.Authorization = null;
     setState({ ...state, user: null });

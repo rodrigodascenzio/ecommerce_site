@@ -13,7 +13,7 @@ export function OrdersContainer() {
   const { user, host } = state;
 
   const { data } = useSWR(
-    `${ORDERS}/${user.user_id},${host.company.company_id},${host.company.category_company_id},-22.872648599999998,-46.9611568,BR`
+    `${ORDERS}/${user.id},${host.company.id},${host.company.category_company_id},-22.872648599999998,-46.9611568,BR`
   );
 
   useEffect(() => {
@@ -73,14 +73,14 @@ export function OrdersContainer() {
         <Orders.Title>Pedidos</Orders.Title>
         <Orders.Group>
           {data.order.map((item) => (
-            <Orders.Item onClick={(e) => handleClickItem(item.order_id)}>
+            <Orders.Item onClick={(e) => handleClickItem(item.id)}>
               <Orders.InnerItem>
                 <Orders.SubText>Data</Orders.SubText>
                 <Orders.Text>{splitDate(item.created_date)}</Orders.Text>
               </Orders.InnerItem>
               <Orders.InnerItem>
                 <Orders.SubText>Nº Pedido</Orders.SubText>
-                <Orders.Text>{item.order_id}</Orders.Text>
+                <Orders.Text>{item.id}</Orders.Text>
               </Orders.InnerItem>
               <Orders.InnerItem style={{ width: "20%" }}>
                 <Orders.SubText>Status</Orders.SubText>

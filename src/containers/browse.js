@@ -15,7 +15,7 @@ export function BrowseContainer() {
   const history = useHistory();
   const { state } = useContext(Context);
   const { user, host } = state;
-  const { data } = useSWR(`${COMPANY_PRODUCTS}/${host.company.company_id}`);
+  const { data } = useSWR(`${COMPANY_PRODUCTS}/${host.company.id}`);
 
   console.log(state);
 
@@ -102,7 +102,7 @@ export function BrowseContainer() {
           <Card.Title>{host?.company.category_company_id === "1" ? "Cardápio" : "Produtos"}</Card.Title>
           <Card.Entities>
             {products?.map((item) => (
-              <Card.Item id={item.product_id} key={item.product_id} item={item} onClick={handleClick}>
+              <Card.Item id={item.id} key={item.id} item={item} onClick={handleClick}>
                 <Card.Image src={item.photo} />
                 <Card.Meta>
                   <Card.SubTitle>{item.name}</Card.SubTitle>

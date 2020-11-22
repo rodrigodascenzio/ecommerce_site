@@ -3,7 +3,7 @@ import { Profile, Loading } from "../components";
 import { EditIcon } from "../components/profile/styles/profile";
 import { USER_AND_ADDRESS, USERS } from "../constants/apiRoutes";
 import { Context } from "../store/Store";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import * as ROUTES from "../constants/routes";
 import axios from "../utils/axios";
 import { mCPF } from "../utils/masks";
@@ -17,12 +17,12 @@ export function ProfileContainer() {
   const history = useHistory();
   const [userAddress, setUserAddress] = useState();
   const [processing, setProcessing] = useState(false);
-  const { data } = useSWR(`${USER_AND_ADDRESS}/${user.user_id}`);
+  const { data } = useSWR(`${USER_AND_ADDRESS}/${user.id}`);
 
   function handleUserInfo(e) {
     setProcessing(true);
     e.preventDefault();
-    const obj = { user_id: data.user_id, full_name: userAddress.full_name };
+    const obj = { user_id: data.id, full_name: userAddress.full_name };
     if (!data.document_number) {
       obj.document_number = userAddress.document_number;
     }
@@ -100,7 +100,10 @@ export function ProfileContainer() {
                   </Profile.Submit>
                 </Profile.Group>
               </Profile.Base>
-              <ProfileAddressContainer address={data.address} />
+              <ProfileAddressContainer
+                address={data.address}
+                callback={() => mutate(`${USER_AND_ADDRESS}/${user.id}`)}
+              />
             </Profile.Content>
             <Profile.Group
               style={{

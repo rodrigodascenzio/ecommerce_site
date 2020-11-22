@@ -12,13 +12,14 @@ import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { IoMdDoneAll } from "react-icons/io";
 import { BsFillInboxesFill } from "react-icons/bs";
 import { FcCancel } from "react-icons/fc";
+import * as ROUTES from "../constants/routes";
 
 export function OrderDetailContainer() {
   const history = useHistory();
   const [ord] = useState({ ...history.location.state });
   const { state } = useContext(Context);
   const { user } = state;
-  const { data } = useSWR(`${ORDER_DETAIL}/${user.user_id},${ord.id},-22.872648599999998,-46.9611568,BR`);
+  const { data } = useSWR(`${ORDER_DETAIL}/${user.id},${ord.id},-22.872648599999998,-46.9611568,BR`);
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {
@@ -37,12 +38,12 @@ export function OrderDetailContainer() {
     axios
       .patch(CANCEL_ORDER, {
         status: "canceled_user",
-        order_id: order.order_id,
+        id: order.id,
         user_id: order.user_id,
         company_id: order.company_id,
       })
       .then((res) => {
-        console.log(res.data);
+        history.push(ROUTES.ORDERS);
         setProcessing(false);
       })
       .catch((e) => {

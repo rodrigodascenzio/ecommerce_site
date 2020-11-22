@@ -14,7 +14,7 @@ export function ProductDetailsContainer() {
   const { state } = useContext(Context);
   const { user, host } = state;
   const { data } = useSWR(
-    prod.edit ? `${PRODUCT_DETAIL_CART}/${prod.id},${user.user_id},${prod.cart_id}` : `${PRODUCT_DETAIL}/${prod.id}`
+    prod.edit ? `${PRODUCT_DETAIL_CART}/${prod.id},${user.id},${prod.cart_id}` : `${PRODUCT_DETAIL}/${prod.id}`
   );
   const [processing, setProcessing] = useState(false);
   const [lifeCycleOption, setlifeCycleOption] = useState([]);
@@ -65,32 +65,32 @@ export function ProductDetailsContainer() {
     if (user) {
       setProcessing(true);
 
-      let productPost = {
-        cart_id: "",
+      let productToCart = {
+        id: "",
         company_id: data.product.company_id,
         note: "",
-        product_id: data.product.product_id,
+        product_id: data.product.id,
         quantity: quantity,
-        user_id: user.user_id,
-        source: host.company.company_id,
+        user_id: user.id,
+        source: host.company.id,
       };
 
       if (data.collection) {
-        productPost.extra = [];
+        productToCart.extra = [];
         lifeCycleOption.map((c) => {
-          c.extra.map((e) => {
-            if (e.quantity > 0) {
-              productPost.extra.push({
+          c.extra.map((extra) => {
+            if (extra.quantity > 0) {
+              productToCart.extra.push({
                 collection_id: c.collection_id,
-                collection_extra_id: e.collection_extra_id,
-                user_id: user.user_id,
-                cart_extra_id: "",
+                collection_extra_id: extra.collection_extra_id,
+                user_id: user.id,
+                id: "",
                 cart_id: "",
-                product_id: data.product.product_id,
-                extra_id: e.extra_id,
-                name: e.name,
-                quantity: e.quantity,
-                price: e.price,
+                product_id: data.product.id,
+                extra_id: extra.id,
+                name: extra.name,
+                quantity: extra.quantity,
+                price: extra.price,
               });
             }
           });
@@ -98,17 +98,17 @@ export function ProductDetailsContainer() {
       }
 
       if (validateSize.length) {
-        validateSize.map((s) => {
-          if (s.is_selected) {
-            productPost.size_id = s.size_id;
-            productPost.size_name = s.name;
+        validateSize.map((size) => {
+          if (size.is_selected) {
+            productToCart.size_id = size.id;
+            productToCart.size_name = size.name;
             return;
           }
         });
       }
 
       axios
-        .post(CART, productPost)
+        .post(CART, productToCart)
         .then((res) => {
           history.push(ROUTES.CART);
         })
@@ -128,30 +128,30 @@ export function ProductDetailsContainer() {
       setProcessing(true);
 
       let productPatch = {
-        cart_id: prod.cart_id,
+        id: prod.cart_id,
         company_id: data.product.company_id,
         note: "",
-        product_id: data.product.product_id,
+        product_id: data.product.id,
         quantity: quantity,
-        user_id: user.user_id,
+        user_id: user.id,
       };
 
       if (lifeCycleOption.length) {
         productPatch.extra = [];
         lifeCycleOption.map((c) => {
-          c.extra.map((e) => {
-            if (e.quantity > 0) {
+          c.extra.map((extra) => {
+            if (extra.quantity > 0) {
               productPatch.extra.push({
-                collection_id: c.collection_id,
-                collection_extra_id: e.collection_extra_id,
-                user_id: user.user_id,
-                cart_extra_id: "",
                 cart_id: prod.cart_id,
-                product_id: data.product.product_id,
-                extra_id: e.extra_id,
-                name: e.name,
-                quantity: e.quantity,
-                price: e.price,
+                collection_id: c.collection_id,
+                collection_extra_id: extra.collection_extra_id,
+                user_id: extra.user_id,
+                id: "",
+                product_id: extra.product_id,
+                extra_id: extra.id,
+                name: extra.name,
+                quantity: extra.quantity,
+                price: extra.price,
               });
             }
           });
@@ -159,10 +159,10 @@ export function ProductDetailsContainer() {
       }
 
       if (validateSize.length) {
-        validateSize.map((s) => {
-          if (s.is_selected) {
-            productPatch.size_id = s.size_id;
-            productPatch.size_name = s.name;
+        validateSize.map((size) => {
+          if (size.is_selected) {
+            productPatch.size_id = size.id;
+            productPatch.size_name = size.name;
             return;
           }
         });
@@ -185,7 +185,7 @@ export function ProductDetailsContainer() {
   function handleClickRadio(e) {
     setValidateSize(
       validateSize.map((size) => {
-        if (size.size_id === e.currentTarget.value) {
+        if (size.id === e.currentTarget.value) {
           return { ...size, is_selected: 1 };
         } else {
           return { ...size, is_selected: 0 };
@@ -208,7 +208,7 @@ export function ProductDetailsContainer() {
               return {
                 ...o,
                 extra: o.extra.map((e) => {
-                  if (e.extra_id === extra.extra_id) {
+                  if (e.id === extra.id) {
                     return {
                       ...e,
                       quantity: e.quantity ? parseInt(e.quantity) + 1 : 1,
@@ -227,7 +227,7 @@ export function ProductDetailsContainer() {
               return {
                 ...o,
                 extra: o.extra.map((e) => {
-                  if (e.extra_id === extra.extra_id) {
+                  if (e.id === extra.id) {
                     return { ...e, quantity: e.quantity ? parseInt(e.quantity) - 1 : 0 };
                   }
                   return e;
@@ -240,7 +240,7 @@ export function ProductDetailsContainer() {
             return {
               ...o,
               extra: o.extra.map((e) => {
-                if (e.extra_id === extra.extra_id) {
+                if (e.id === extra.id) {
                   return { ...e, quantity: 1 };
                 } else {
                   return { ...e, quantity: 0 };
@@ -282,26 +282,28 @@ export function ProductDetailsContainer() {
           {validateSize?.length > 0 && (
             <Product.Group>
               <Product.Text style={{ padding: "0 10px" }}>Tamanhos</Product.Text>
-              {validateSize.map((s) => (
+              {validateSize.map((size) => (
                 <Product.SubGroup
                   style={{
-                    background: s.stock_quantity < 1 ? "#fafafa" : "none",
-                    color: s.stock_quantity < 1 ? "#ccc" : "",
+                    background: size.stock_quantity < 1 ? "#fafafa" : "none",
+                    color: size.stock_quantity < 1 ? "#ccc" : "",
                   }}
                 >
                   <label>
                     <Product.Input
-                      disabled={s.stock_quantity < 1}
+                      disabled={size.stock_quantity < 1}
                       onClick={handleClickRadio}
                       type="radio"
                       name="size"
-                      id={data.product.product_id}
-                      value={s.size_id}
-                      checked={s.is_selected}
+                      id={size.product_id}
+                      value={size.id}
+                      checked={size.is_selected}
                     />
                     <Product.SubGroup className="subgroup" direction="row">
-                      <Product.SubText>{s.name}</Product.SubText>
-                      <Product.SubText>{s.price > 0 ? `+ ${mMoney(s.price)}` : `${mMoney(s.price)}`}</Product.SubText>
+                      <Product.SubText>{size.name}</Product.SubText>
+                      <Product.SubText>
+                        {size.price > 0 ? `+ ${mMoney(size.price)}` : `${mMoney(size.price)}`}
+                      </Product.SubText>
                     </Product.SubGroup>
                   </label>
                 </Product.SubGroup>
@@ -329,7 +331,7 @@ export function ProductDetailsContainer() {
                             type="radio"
                             name="extra"
                             id={c.collection_id}
-                            value={e.extra_id}
+                            value={e.id}
                             checked={e.quantity}
                           />
                           <div>

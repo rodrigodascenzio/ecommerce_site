@@ -20,7 +20,7 @@ export function CartContainer() {
   const [processingDelete, setProcessingDelete] = useState(false);
 
   const { data } = useSWR(
-    `${CART}/${user.user_id}/${host.company.company_id}/-22.872648599999998/-46.9611568/BR/${host.company.company_id}`
+    `${CART}/${user.id}/${host.company.id}/-22.872648599999998/-46.9611568/BR/${host.company.id}`
   );
 
   useEffect(() => {
@@ -31,12 +31,26 @@ export function CartContainer() {
 
   console.log(data);
 
-  const products = data.cart_company.product;
-  const cart = data.cart_company;
+  const cartItems = data.cart_company.product;
+  const cartAll = data.cart_company;
 
   console.log("caarat", user);
 
-  if (data.cart_company_empty || products.length < 1) {
+  if (!user.address) {
+    return (
+      <Cart>
+        <Cart.Card style={{ textAlign: "center" }}>
+          <ProfileAddressContainer
+            callback={() => {
+              mutate(`${CART}/${user.id}/${host.company.id}/-22.872648599999998/-46.9611568/BR/${host.company.id}`);
+            }}
+          />
+        </Cart.Card>
+      </Cart>
+    );
+  }
+
+  if (data.cart_company_empty || cartItems.length < 1) {
     return (
       <Cart>
         <Cart.Card>
@@ -51,32 +65,14 @@ export function CartContainer() {
     );
   }
 
-  if (!user.address) {
-    return (
-      <Cart>
-        <Cart.Card style={{ textAlign: "center" }}>
-          <ProfileAddressContainer
-            callback={() => {
-              mutate(
-                `${CART}/${user.user_id}/${host.company.company_id}/-22.872648599999998/-46.9611568/BR/${host.company.company_id}`
-              );
-            }}
-          />
-        </Cart.Card>
-      </Cart>
-    );
-  }
-
   function handleChangeTypeOrder(type) {
     setProcessingAddress(true);
-    const { payment_method, user_id, company_id } = cart.info;
+    const { payment_method, user_id, company_id } = cartAll.info;
     axios
       .patch(CART_INFO, { payment_method, type, user_id, company_id })
       .then(async (res) => {
         console.log(res);
-        await mutate(
-          `${CART}/${user.user_id}/${host.company.company_id}/-22.872648599999998/-46.9611568/BR/${host.company.company_id}`
-        );
+        await mutate(`${CART}/${user.id}/${host.company.id}/-22.872648599999998/-46.9611568/BR/${host.company.id}`);
         setProcessingAddress(false);
       })
       .catch((error) => {
@@ -87,14 +83,12 @@ export function CartContainer() {
 
   function handleChangePayment(payment_method) {
     setmakingChanges(true);
-    const { type, user_id, company_id } = cart.info;
+    const { type, user_id, company_id } = cartAll.info;
     axios
       .patch(CART_INFO, { payment_method, type, user_id, company_id })
       .then(async (res) => {
         console.log(res);
-        await mutate(
-          `${CART}/${user.user_id}/${host.company.company_id}/-22.872648599999998/-46.9611568/BR/${host.company.company_id}`
-        );
+        await mutate(`${CART}/${user.id}/${host.company.id}/-22.872648599999998/-46.9611568/BR/${host.company.id}`);
         setmakingChanges(false);
       })
       .catch((error) => {
@@ -105,14 +99,12 @@ export function CartContainer() {
 
   function handleChangeCoupon(coupon_id) {
     setProcessingCoupon(true);
-    const { user_id, company_id } = cart.info;
+    const { user_id, company_id } = cartAll.info;
     axios
       .patch(CART_COUPON_INFO, { source: company_id, user_id, company_id, coupon_id })
       .then(async (res) => {
         console.log(res);
-        await mutate(
-          `${CART}/${user.user_id}/${host.company.company_id}/-22.872648599999998/-46.9611568/BR/${host.company.company_id}`
-        );
+        await mutate(`${CART}/${user.id}/${host.company.id}/-22.872648599999998/-46.9611568/BR/${host.company.id}`);
         setProcessingCoupon(false);
       })
       .catch((error) => {
@@ -124,10 +116,10 @@ export function CartContainer() {
   function handleOrder() {
     setProcessing(true);
     axios
-      .post(CART_ORDER, { source: cart.company_id, user_id: user.user_id })
+      .post(CART_ORDER, { source: cartAll.company_id, user_id: cartAll.user_id })
       .then((res) => {
         console.log(res);
-        history.replace(ROUTES.ORDER_DETAIL, { id: res.data.order.order_id });
+        history.replace(ROUTES.ORDER_DETAIL, { id: res.data.order.id });
       })
       .catch((e) => {
         console.log(e.response.data.error.error_message);
@@ -135,29 +127,29 @@ export function CartContainer() {
       });
   }
 
-  async function handleDeleteIcon(e, product) {
+  async function handleDeleteIcon(e, cartItem) {
     if (!e) var e = window.event;
     e.cancelBubble = true;
     if (e.stopPropagation) e.stopPropagation();
 
     setProcessingDelete(true);
-    const url = `${CART}/${user.user_id}/${host.company.company_id}/-22.872648599999998/-46.9611568/BR/${host.company.company_id}`;
+    const url = `${CART}/${user.id}/${host.company.id}/-22.872648599999998/-46.9611568/BR/${host.company.id}`;
 
     try {
       mutate(
         url,
         {
           ...data,
-          cart_company: { ...data.cart_company, product: products.filter((p) => p.cart_id !== product.cart_id) },
+          cart_company: { ...data.cart_company, product: cartItems.filter((c) => c.id !== cartItem.id) },
         },
         false
       );
       await axios.delete(CART_DELETE_PRODUCT, {
         data: {
-          source: cart.company_id,
-          user_id: user.user_id,
-          cart_id: product.cart_id,
-          product_id: product.product_id,
+          source: cartItem.company_id,
+          user_id: cartItem.user_id,
+          id: cartItem.id,
+          product_id: cartItem.product_id,
         },
       });
       await trigger(url);
@@ -168,18 +160,18 @@ export function CartContainer() {
     setProcessingDelete(false);
   }
 
-  function handleEditProduct(e, product) {
-    history.push(ROUTES.PRODUCT_DETAIL, { id: product.product_id, cart_id: product.cart_id, edit: true });
+  function handleEditProduct(e, cartItem) {
+    history.push(ROUTES.PRODUCT_DETAIL, { id: cartItem.product_id, cart_id: cartItem.id, edit: true });
   }
 
   return (
     <Cart>
-      {Array.isArray(products) && products.length > 0 && (
+      {Array.isArray(cartItems) && cartItems.length > 0 && (
         <Cart.Card>
           <Cart.Title style={{ margin: "20px 5px" }}>Carrinho</Cart.Title>
           <Cart.Products>
             <>
-              {products.map((p) => (
+              {cartItems.map((p) => (
                 <Cart.Product
                   style={{ border: parseInt(p.is_available) ? "none" : "1px solid red" }}
                   onClick={(e) => handleEditProduct(e, p)}
@@ -212,13 +204,13 @@ export function CartContainer() {
                 handleChangeTypeOrder(e.target.value);
               }}
             >
-              {cart.is_delivery === "1" && (
-                <option selected={cart.info.type === "delivery"} value="delivery">
+              {cartAll.is_delivery === "1" && (
+                <option selected={cartAll.info.type === "delivery"} value="delivery">
                   Entregar em
                 </option>
               )}
-              {cart.is_local === "1" && (
-                <option selected={cart.info.type === "local"} value="local">
+              {cartAll.is_local === "1" && (
+                <option selected={cartAll.info.type === "local"} value="local">
                   Retirar em
                 </option>
               )}
@@ -226,7 +218,7 @@ export function CartContainer() {
             {processingAddress ? (
               <Cart.Text>Carregando...</Cart.Text>
             ) : (
-              <Cart.Text>{cart.info.type === "delivery" ? cart.user_address : cart.full_address}</Cart.Text>
+              <Cart.Text>{cartAll.info.type === "delivery" ? cartAll.user_address : cartAll.full_address}</Cart.Text>
             )}
           </Cart.Products>
 
@@ -237,7 +229,7 @@ export function CartContainer() {
                 <option value="online" disabled={true}>
                   Online
                 </option>
-                <option value="offline">Na {cart.info.type === "delivery" ? "entrega" : "retirada"}</option>
+                <option value="offline">Na {cartAll.info.type === "delivery" ? "entrega" : "retirada"}</option>
               </Cart.Select>
               <Cart.Select
                 name="payment"
@@ -247,8 +239,8 @@ export function CartContainer() {
                 }}
               >
                 <option value="null">Selecione..</option>
-                {cart.payments.map((p) => (
-                  <option selected={cart.info.payment_method === p.name} value={p.name}>
+                {cartAll.payments.map((p) => (
+                  <option selected={cartAll.info.payment_method === p.name} value={p.name}>
                     {p.name}
                   </option>
                 ))}
@@ -261,17 +253,17 @@ export function CartContainer() {
             <Cart.SubGroup column={true}>
               <Cart.SubGroup>
                 <Cart.Text>Subtotal</Cart.Text>
-                <Cart.Price>{processingDelete ? "Carregando.." : mMoney(cart.subtotal_amount)}</Cart.Price>
+                <Cart.Price>{processingDelete ? "Carregando.." : mMoney(cartAll.subtotal_amount)}</Cart.Price>
               </Cart.SubGroup>
-              {cart.info.type === "delivery" && (
+              {cartAll.info.type === "delivery" && (
                 <Cart.SubGroup>
                   <Cart.Text>Entrega</Cart.Text>
                   <Cart.Price>
                     {processingDelete
                       ? "Carregando.."
-                      : cart.delivery_amount < 1
+                      : cartAll.delivery_amount < 1
                       ? "Grátis"
-                      : mMoney(cart.delivery_amount)}
+                      : mMoney(cartAll.delivery_amount)}
                   </Cart.Price>
                 </Cart.SubGroup>
               )}
@@ -289,16 +281,16 @@ export function CartContainer() {
                   >
                     <option value="null">Selecione..</option>
                     {data.coupon.map((c) => (
-                      <option selected={cart.info.coupon_id === c.coupon_id} value={c.coupon_id}>
+                      <option selected={cartAll.info.coupon_id === c.id} value={c.id}>
                         {processingDelete
                           ? "Carregando.."
-                          : cart.info.coupon_id === c.coupon_id
-                          ? mMoney(cart.discount_amount)
+                          : cartAll.info.coupon_id === c.id
+                          ? mMoney(cartAll.discount_amount)
                           : c.discount_type === "1"
-                          ? parseInt(c.value) >= parseInt(cart.subtotal_amount)
-                            ? mMoney(cart.subtotal_amount)
+                          ? parseInt(c.value) >= parseInt(cartAll.subtotal_amount)
+                            ? mMoney(cartAll.subtotal_amount)
                             : mMoney(c.value)
-                          : mMoney(roudHalf((c.value * cart.subtotal_amount) / 100))}
+                          : mMoney(roudHalf((c.value * cartAll.subtotal_amount) / 100))}
                       </option>
                     ))}
                   </Cart.Select>
@@ -310,8 +302,8 @@ export function CartContainer() {
                 <Cart.Price>
                   {makingChanges || processingAddress
                     ? "Carregando.."
-                    : `${cart.info.type === "delivery" ? "Na entrega" : "Na retirada"} - ${
-                        cart.info.payment_method ? cart.info.payment_method : "Não definido"
+                    : `${cartAll.info.type === "delivery" ? "Na entrega" : "Na retirada"} - ${
+                        cartAll.info.payment_method ? cartAll.info.payment_method : "Não definido"
                       }`}
                 </Cart.Price>
               </Cart.SubGroup>
@@ -319,7 +311,7 @@ export function CartContainer() {
               <Cart.SubGroup>
                 <Cart.Text style={{ fontWeight: "bold", fontSize: "16px" }}>Total</Cart.Text>
                 <Cart.Price style={{ fontWeight: "bold", fontSize: "16px" }}>
-                  {processingCoupon || processingDelete ? "Carregando.." : mMoney(cart.total_amount)}
+                  {processingCoupon || processingDelete ? "Carregando.." : mMoney(cartAll.total_amount)}
                 </Cart.Price>
               </Cart.SubGroup>
             </Cart.SubGroup>
